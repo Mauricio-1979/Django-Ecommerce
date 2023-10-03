@@ -41,3 +41,6 @@ class User(AbstractBaseUser, PermissionsMixin):
   class Meta:
     ordering = ["-date_joined"]
 
+  def __str__(self):
+    return self.name + " - " + self.avatar
+

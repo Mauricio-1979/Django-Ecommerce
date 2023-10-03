@@ -62,65 +62,171 @@ const Products = ({ results }: Props) => {
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-4 py-3">Product ID</th>
-            <th scope="col" className="px-4 py-3">Email</th>
-            <th scope="col" className="px-4 py-3">Username</th>
-            <th scope="col" className="px-4 py-3 flex items-center justify-center gap-4">Actions</th>
+            <th scope="col" className="px-4 py-3">
+              Product ID
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Name
+            </th>
+
+            <th scope="col" className="px-4 py-3">
+              Price
+            </th>
+
+            <th scope="col" className="px-4 py-3">
+              Count in stock
+            </th>
+
+            <th
+              scope="col"
+              className="px-4 py-3 flex justify-center gap-4"
+            >
+              Actions
+              <Link to="add">
+                <AiFillPlusSquare
+                  size={22}
+                  className="text-green-300 cursor-pointer"
+                />
+              </Link>
+            </th>
           </tr>
         </thead>
 
-        {data?.pages.map((page: any) => (
+        {results && results?.product?.length > 0 ? (
           <>
-            {/* <div className="flex justify-center" > */}
-            <tbody
-              key={page.data.id}              
-            >
-              {page.data.map((product: Product) => (
-                <tr className="border-b dark:border-gray-700">
-                  <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">sdsd</th>
-                  <td className="px-4 py-3">sdsdsd</td>
-                  <td className="px-4 py-3">sdsdsd</td>
-                  <td className="px-4 py-3 flex items-center justify-center gap-4">
-                    <BsFillTrashFill size={22}
-                      onClick={() => {
-                        if (product.id !== undefined) {
-                          deleteProdMutation.mutate(product.id)
-                        }
-                      }}
-                      className="text-red-300 cursor-pointer" />
-                    <AiFillEdit size={22} className="text-white-300 cursor-pointer" />
-                    <Link to='add'>
-                      <AiFillPlusSquare size={22} className="text-green-300 cursor-pointer" />
-                    </Link>
-                  </td>
-                </tr>
+             {results &&
+              results.product.map((product: Product) => (
+                <tbody>
+                  <tr className="border-b dark:border-gray-700">
+                    <th
+                      scope="row"
+                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {product.id}
+                    </th>
+
+                    <td className="px-4 py-3">
+                      {product.name}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      $ {product.price}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      {product.count_in_stock}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <div className="flex justify-center gap-4">
+                        <BsFillTrashFill
+                          onClick={() => {
+                            if (
+                              product.id !==
+                              undefined
+                            ) {
+                              deleteProdMutation.mutate(
+                                product.id
+                              );
+                            }
+                          }}
+                          size={22}
+                          className="text-red-300 cursor-pointer"
+                        />
+
+                        <Link to={`edit/${product.id}`}>
+                          <AiFillEdit
+                            size={22}
+                            className="text-white cursor-pointer"
+                          />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
               ))}
-            </tbody>
-            {/* </div>
-          </div> */}
-
-            {!isLoading && data?.pages.length === 0 && (
-              <p className="text-xl text-slate-800 dark:text-slate-200">
-                No more results
-              </p>
-            )}
-            {!isLoading &&
-              data?.pages?.length !== undefined &&
-              data.pages.length > 0 &&
-              hasNextPage && (
-                <div ref={ref}>
-                  {isLoading || isFetchingNextPage ? (
-                    <p>Loading...</p>
-                  ) : null}
-                </div>
-              )}
           </>
-          ))
-        }
+        ) : (
+          <>
+            {data?.pages.map((page: any) => (
+              <>
+                <tbody key={page.meta.next}>
+                  {page.data.map((product: Product) => (
+                    <tr className="border-b dark:border-gray-700">
+                      <th
+                        scope="row"
+                        className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {product.id}
+                      </th>
 
-      </table >
+                      <td className="px-4 py-3">
+                        {product.name}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        $ {product.price}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        {product.count_in_stock}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <div className="flex justify-center gap-4">
+                          <BsFillTrashFill
+                            onClick={() => {
+                              if (
+                                product.id !==
+                                undefined
+                              ) {
+                                deleteProdMutation.mutate(
+                                  product.id
+                                );
+                              }
+                            }}
+                            size={22}
+                            className="text-red-300 cursor-pointer"
+                          />
+
+                          <Link
+                            to={`edit/${product.id}`}
+                          >
+                            <AiFillEdit
+                              size={22}
+                              className="text-white cursor-pointer"
+                            />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+
+                {!isLoading && data?.pages.length === 0 && (
+                  <p className="text-xl text-slate-800 dark:text-slate-200">
+                    No more results
+                  </p>
+                )}
+                {!isLoading &&
+                  data?.pages?.length !== undefined &&
+                  data.pages.length > 0 &&
+                  hasNextPage && (
+                    <div ref={ref}>
+                      {isLoading || isFetchingNextPage ? (
+                        <Loader />
+                      ) : null}
+                    </div>
+                  )}
+              </>
+            ))}
+          </> 
+          )
+      } 
+      </table>
     </div>
-  )
-        }
+  );
 
-        export default Products
+}
+
+export default Products

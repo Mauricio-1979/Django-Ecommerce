@@ -1,7 +1,7 @@
 import { useState } from "react";
-// import { search_prod } from "../api/products";
-// import { search_users } from "../api/users";
-// import { useQuery } from "@tanstack/react-query";
+import { search_prod } from "../api/products";
+import { search_users } from "../api/users";
+import { useQuery } from "@tanstack/react-query";
 import Products from "../components/Products";
 import Orders from "../components/Orders";
 import Users from "../components/Users";
@@ -10,27 +10,27 @@ import Users from "../components/Users";
 const AdminPage = () => {
 
   const [show, setShow] = useState(0);
-  // const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
 
-  // const { data } = useQuery({
-  //     queryKey: ["products", search],
-  //     queryFn: () => {
-  //         if (search && show === 0) {
-  //             return search_prod(search);
-  //         }
-  //         return { products: [] };
-  //     },
-  // });
+  const { data } = useQuery({
+      queryKey: ["products", search],
+      queryFn: () => {
+          if (search && show === 0) {
+              return search_prod(search);
+          }
+          return { products: [] };
+      },
+  });
 
-  // const { data: users } = useQuery({
-  //     queryKey: ["users", search],
-  //     queryFn: () => {
-  //         if (search && show === 2) {
-  //             return search_users(search);
-  //         }
-  //         return { users: [] };
-  //     },
-  // });
+  const { data: users } = useQuery({
+      queryKey: ["users", search],
+      queryFn: () => {
+          if (search && show === 2) {
+              return search_users(search);
+          }
+          return { users: [] };
+      },
+  });
 
   // const { data: orders } = useQuery({
   //     queryKey: ["orders", search],
@@ -72,8 +72,8 @@ const AdminPage = () => {
                     </svg>
                   </div>
                   <input
-                    // value={search}
-                    // onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Search"
@@ -106,9 +106,9 @@ const AdminPage = () => {
             </div>
           </div>
 
-          {show === 0 && <Products />} {/*results={data}*/}
+          {show === 0 && <Products results={data} />} 
           {show === 1 && <Orders  />} {/*results={orders}*/}
-          {show === 2 && <Users  />} {/*results={users}*/}
+          {show === 2 && <Users results={users}/>} 
 
         </div>
       </div>

@@ -4,12 +4,16 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { toast } from "react-hot-toast"
 import { useInView } from "react-intersection-observer"
+import SearchResult from "./SearchResult"
+
 
 import { Product } from "../Interfaces"
+import { useSearchStore } from "../store/search"
 
 const HomePage = () => {
 
   const { ref, inView } = useInView()
+  const searchTerm = useSearchStore((state) => state.searchTerm)
 
   const { data, isLoading, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
     ['product'],
@@ -26,8 +30,9 @@ console.log(data);
       }
     }, [inView])
 
-    if (isLoading) return <p>Loading...</p>
+    //if (isLoading) return <p>Loading...</p>
     if (error instanceof Error) return <>{toast.error(error.message)}</>
+    if (searchTerm) return <SearchResult />
 
   return (
     <>

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'users',
     'products',
+    'orders'
 ]
 
 # token_blacklist es para que los token no se puedan volver a utilizar
