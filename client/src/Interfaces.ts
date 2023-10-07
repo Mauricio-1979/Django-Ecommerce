@@ -13,10 +13,11 @@ export interface Product {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   email: string;
   name: string;
   last_name: string
+  avatar: File | null
 }
 
 export interface Order {
@@ -30,6 +31,10 @@ export interface Order {
 
 export interface Token {
   exp: number;
+  user_id: number;
   is_staff: boolean;
-  avatar: string;
+  email: string;
+  name: string;
+  last_name: string
+  avatar: File | null;
 }

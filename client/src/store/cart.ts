@@ -10,6 +10,7 @@ interface State {
 interface Actions {
   addToCart: (Item: Product) => void
   removeFromCart: (Item: Product) => void
+  removeAll: () => void
 }
 
 const State = {
@@ -20,6 +21,7 @@ const State = {
 export const useCartStore = create(persist<State & Actions>((set, get) => ({
   cart: State.cart,
   totalPrice: State.totalPrice,
+  
 
   addToCart: (product: Product) => {
     const cart = get().cart
@@ -31,7 +33,7 @@ export const useCartStore = create(persist<State & Actions>((set, get) => ({
       )
       set(state => ({
         cart: updatedCart,
-        totalPrice: state.totalPrice + Number(product.price),
+        totalPrice: state.totalPrice + Number(product.price)
       }))
     } else {
       const updatedCart = [...cart, { ...product, quantity: 1 }]
@@ -55,14 +57,25 @@ export const useCartStore = create(persist<State & Actions>((set, get) => ({
         cart: updatedCart,
         totalPrice: state.totalPrice - Number(product.price),
       }))
-    } else {
+    } else {      
       set(state => ({
         cart: state.cart.filter(item => item.id !== product.id),
         totalPrice: state.totalPrice - Number(product.price),
+        
       }))
     }
   },
+
+  removeAll: () => {
+    set({
+      cart:[],
+      totalPrice: 0
+    })
+  }
+
 }),
+
+
 
   {
     name: "cart-storage",

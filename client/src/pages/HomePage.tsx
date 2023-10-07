@@ -43,12 +43,13 @@ console.log(data);
               key={page.data.id}
               className="p-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-16"
             >
-              {page.data.map((product: Product) => (
+              {page.data.map((product: Product) => (                  
                 <ProductCard
                   key={product.id}
                   product={product}
-                />
-              ))}
+                />                
+              )              
+              )}
             </div>
           </div>
 

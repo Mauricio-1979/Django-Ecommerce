@@ -32,6 +32,23 @@ class LoginView(TokenObtainPairView):
   serializer_class = MyTokenObtainPairSerializer
 
 
+@api_view(['PUT'])
+def edit_user(request, pk):
+  try:
+    user = User.objects.get(pk=pk)
+  except User.DoesNotExist:
+    return Response(status=status.HTTP_404_NOT_FOUND)
+  if request.user == user:
+    serilizer = UserSerializer(user, data=request.data)
+    if serilizer.is_valid():
+      serilizer.save()
+      return Response(serilizer.data)
+    else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+  else:  
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 @api_view(['DELETE'])
 def delete_user(request, pk):
   if request.user.is_staff:

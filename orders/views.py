@@ -36,15 +36,15 @@ def create_order(request):
   
   orderItems = data['order_items']
   total_price = data['total_price']  
-  #sum_of_prices = sum(int(float(item['price'])) * item['quantity'] for item in orderItems)
+  sum_of_prices = sum(float(item['price']) * item['quantity'] for item in orderItems)
 
-  #if total_price == sum_of_prices:
-  order = Order.objects.create(
+  if total_price == sum_of_prices:
+    order = Order.objects.create(
     user=user,
     total_price=total_price
     )
 
-  ShippingAddress.objects.create(
+    ShippingAddress.objects.create(
       order=order,
       address=data['address'],
       city=data['city'],
@@ -52,7 +52,7 @@ def create_order(request):
       postal_code=data['postal_code'],
     )
 
-  for i in orderItems:
+    for i in orderItems:
       product = Product.objects.get(id=i['id'])
       item = OrderItem.objects.create(
         product=product,
@@ -64,10 +64,10 @@ def create_order(request):
       product.count_in_Stock -= item.quantity
       product.save()
 
-  serializer = OrderSerializer(order, many=False)
-  return Response(serializer.data, status=status.HTTP_201_CREATED)
-  #else:
-  #  return Response({'mensaje': sum_of_prices}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = OrderSerializer(order, many=False)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+  else:
+    return Response({'mensaje': sum_of_prices}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

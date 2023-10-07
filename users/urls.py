@@ -9,6 +9,7 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view()),
     path('get/', views.get_users),
     path('search/', views.search_user),
+    path('edit/<int:pk>', views.edit_user),
     path('delete/<int:pk>', views.delete_user),
 ]
 
