@@ -27,7 +27,7 @@ const EditProductPage = () => {
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ['product', id],
+    queryKey: ['product_edit', id],
     queryFn: () => get_solo_prod(prodId)
   })  
 
@@ -60,8 +60,7 @@ const EditProductPage = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Presionaste el boton Add");
-    
+        
     editProdMutation.mutate({      
       name: name,
       count_in_stock: countInStock,

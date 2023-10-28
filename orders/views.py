@@ -58,7 +58,10 @@ def create_order(request):
         product=product,
         order=order,
         quantity=i['quantity'],
-        price=i['price']
+        price=i['price'],
+        description=i['description'],
+        category=i['category'],
+        image=i['image'],
       )
 
       product.count_in_Stock -= item.quantity

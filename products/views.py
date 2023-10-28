@@ -1,11 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status, generics
 from django.utils.text import slugify
 
-from . models import Product
-from . serializers import  ProductSerializer
+from . models import Product, Reviews
+from . serializers import  ProductSerializer, ReviewsSerializer
 from backend.pagination import CustomPagiantion
+from . permissions import IsOwnerOrReadOnly
 
 
 @api_view(['GET'])
@@ -89,3 +91,16 @@ def get_prod_by_cate(request, category):
   product = Product.objects.filter(category=category)
   serializer = ProductSerializer(product, many=True)
   return Response(serializer.data)
+
+
+class ReviewList(generics.ListCreateAPIView):
+  queryset = Reviews.objects.all()
+  serializer_class =ReviewsSerializer
+
+  def perform_create(self, serializer):
+    serializer.save(user=self.request.user)
+
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Reviews.objects.all()
+  serializer_class = ReviewsSerializer
+  permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]

@@ -7,15 +7,17 @@ import Loader from "./Loader";
 import { User } from "../Interfaces";
 
 interface Props {
-  results: any
+  results: User
 }
 
 const Users = ({results}: Props) => {
 
-  const {data, isLoading, isError} = useQuery({
-    queryKey: ['users'],
+  const {data:client, isLoading, isError} = useQuery({
+    queryKey: ['client'],
     queryFn: get_users
   })
+
+  console.log("USER: ", client)
 
   const queryClient = useQueryClient();
 
@@ -30,7 +32,8 @@ const Users = ({results}: Props) => {
       toast.error("Error!")
     },
   });
-  
+
+    
   if(isError) return toast.error("Error!")
   if(isLoading) return <Loader />
   if(deleteUserMutation.isLoading) return <Loader />
@@ -48,7 +51,7 @@ const Users = ({results}: Props) => {
           </tr>
         </thead>
 
-        {results && results?.users?.length > 0 ? (
+        {results && results.users.length > 0 ? (
           <>
           {results && results.users.map((user: User) =>(
 
@@ -70,7 +73,7 @@ const Users = ({results}: Props) => {
           </>
         ) : (
           <tbody>
-          {data && data?.map((user: User) =>(
+          {client && client?.map((user: User) =>(
             <tr className="border-b dark:border-gray-700">
               <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{user.id}</th>
               <td className="px-4 py-3">{user.email}</td>

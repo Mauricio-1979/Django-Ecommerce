@@ -21,14 +21,14 @@ const LoginPage = () => {
   const loginMutation = useMutation({
     mutationFn: () => loginRequest(email, password),
     onSuccess: (response) => {
-      console.log(response)
+      
       setToken(response.data.access, response.data.refresh)
       toast.success("Successful login!")
       navigate("/")
     },
     onError: (error) => {
       toast.error("There was a mistake, try again")      
-      console.log(error)
+      
     }
   })
 
@@ -42,7 +42,7 @@ const LoginPage = () => {
   if(isAuth) return (<Navigate to="/" />)
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[800px] lg:py-0">
+    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[500px] lg:py-0">
     <Link to="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
       <img className="w-8 h-8 mr-2" src={Logo} alt="logo"/>
       <span>Shop Zone</span>

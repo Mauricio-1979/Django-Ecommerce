@@ -10,13 +10,12 @@ import { useCartStore } from "../store/cart";
 
 const SearchByCate = () => {
 
-  const { cate } = useParams()
-  console.log(cate);
+  const { cate } = useParams()  
   
   const addToCart = useCartStore(state => state.addToCart)
 
   const { data, isError, isLoading } = useQuery({
-    queryKey: ['product', cate],
+    queryKey: ['product_category', cate],
     queryFn: () => get_category(cate || ''),
   })
 

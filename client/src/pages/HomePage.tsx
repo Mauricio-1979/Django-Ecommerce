@@ -16,13 +16,13 @@ const HomePage = () => {
   const searchTerm = useSearchStore((state) => state.searchTerm)
 
   const { data, isLoading, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ['product'],
+    ['product_home'],
     get_products,
     {
       getNextPageParam: (page: any) => page.meta.next
     }
   )
-console.log(data);
+
 
     useEffect(() => {
       if(inView) {

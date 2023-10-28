@@ -29,10 +29,16 @@ export const edit_user = async (data: User) => {
   if(data.avatar  && typeof data.avatar !== "string") {
     formData.append('avatar', data.avatar)
   }  
-  await authApi.put(`/users/edit/${data.id}`, formData)
+  const response = await authApi.put(`/users/edit/${data.id}`, formData)
+  return response
   //await authApi.put<Product>(`/product/edit/${data.id}/`, formData)
 }
 
 export const delete_user = async (id:number) => { 
   await authApi.delete(`/users/delete/${id}`)
+}
+
+export const get_solo_user = async (id: number) => {
+  const response = await authApi.get(`/users/user/${id}`)
+  return response.data
 }

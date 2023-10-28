@@ -13,15 +13,13 @@ export const get_category = async (cate: string) => {
   return response.data
 }
 
-export const get_solo =async (slug: string) => {
-  console.log(slug);
+export const get_solo =async (slug: string) => {  
   
   const response = await authApi.get(`/product/name/${slug}`)
   return response.data
 }
 
 export const get_solo_prod =async (id: number) => {
-  console.log(id);
   
   const response = await authApi.get(`/product/id/${id}`)
   return response.data
@@ -54,8 +52,6 @@ export const get_products = async ({ pageParam = 1 }) => {
 }
 
 export const edit_product = async (data: Product) => {  
-  console.log("POR SUPUESTO QUE LLEGASTA ACA");
-  //console.log(data);
   
   const formData = new FormData();
   formData.append('name', data.name)
@@ -74,3 +70,7 @@ export const delete_product = async (id: number) => {
   await authApi.delete(`/product/delete/${id}`)
 }
 
+export const create_review = async (id: number) => {
+  await authApi.post(`/products/reviews/${id}`)
+  //return response.data
+} 

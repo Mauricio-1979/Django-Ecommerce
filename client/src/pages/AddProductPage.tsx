@@ -29,8 +29,7 @@ const AddProductPage = () => {
     
     mutationFn: postProduct,
     onSuccess: () => {
-      console.log("Entraste al success de addProdMutation");
-      
+            
       queryClient.invalidateQueries({ queryKey: ["product"] });
       toast.success("Product Created Successfully")
       navigate("/admin")
@@ -43,8 +42,7 @@ const AddProductPage = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Presionaste el boton Add");
-    
+        
     addProdMutation.mutate({
       name: name,
       count_in_stock: countInStock,

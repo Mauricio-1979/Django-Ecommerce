@@ -9,7 +9,7 @@ const SearchResult = () => {
   const searchTerm = useSearchStore((state) => state.searchTerm)
 
   const {data} = useQuery({
-    queryKey: ['product', searchTerm],
+    queryKey: ['search_product', searchTerm],
     queryFn: () => {
       if(searchTerm){
         return search_prod(searchTerm)

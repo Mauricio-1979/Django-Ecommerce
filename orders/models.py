@@ -16,7 +16,9 @@ class OrderItem(models.Model):
   order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
   quantity = models.IntegerField(null=True, blank=True, default=0)
   price = models.CharField(max_length=250, blank=True)
-
+  image = models.ImageField(blank=True)
+  category = models.CharField(max_length=100, blank=True)
+  description = models.CharField(max_length=100, blank=True)
 
 class ShippingAddress(models.Model):
   order = models.OneToOneField(Order, on_delete=models.CASCADE, null=True, blank=True)

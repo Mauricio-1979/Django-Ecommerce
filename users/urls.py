@@ -11,5 +11,6 @@ urlpatterns = [
     path('search/', views.search_user),
     path('edit/<int:pk>', views.edit_user),
     path('delete/<int:pk>', views.delete_user),
+    path('user/<int:pk>', views.get_solo_user),
 ]
 

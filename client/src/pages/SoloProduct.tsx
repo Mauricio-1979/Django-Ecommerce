@@ -3,9 +3,12 @@ import Loader from "../components/Loader";
 import { get_solo } from "../api/products";
 import { useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-//import Reviews from "../components/Reviews";
+import {useCartStore} from "../store/cart"
+import Reviews from "../components/Reviews";
 
 const SoloProduct = () => {
+
+  const addToCart = useCartStore(state => state.addToCart)
 
   const { slug } = useParams();
 
@@ -31,6 +34,7 @@ const SoloProduct = () => {
           <p className="mb-4 font-bold">{data.description}</p>
           <a
             href="#"
+            onClick={() => addToCart(data)}
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Add to Cart
@@ -59,6 +63,7 @@ const SoloProduct = () => {
         />
       </div>
       {/* <Reviews productId={data.id} reviews={data.reviews} /> */}
+      <Reviews />
     </div>
   );
 };

@@ -15,7 +15,6 @@ export const axi = axios.create({
 })
 
 
-
 export const authApi = axios.create({
   baseURL: 'http://localhost:8000',
   withCredentials: true  
@@ -23,7 +22,6 @@ export const authApi = axios.create({
 });
 
 authApi.interceptors.request.use(async (config) => {
-  console.log("ENTRASTE EN authApi.interceptors.request.use");
   
   const token: string = useAuthStore.getState().access;
     config.headers = {
@@ -37,13 +35,13 @@ authApi.interceptors.request.use(async (config) => {
     const fiveMin = 1000 * 60 * 5;
 
     if (expiration.getTime() - now.getTime() < fiveMin) 
-        try {
-            const response = await axi.post('/users/refresh/', { refresh: useAuthStore.getState().refresh })
-            useAuthStore.getState().setToken(response.data.access, response.data.refresh)
-        } catch (err) {
-            logout()
-        }
-        return config
+      try {
+          const response = await axi.post('/users/refresh/', { refresh: useAuthStore.getState().refresh })
+          useAuthStore.getState().setToken(response.data.access, response.data.refresh)
+      } catch (err) {
+          logout()
+      }
+      return config
   }
 )
 

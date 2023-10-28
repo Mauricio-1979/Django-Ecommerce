@@ -30,14 +30,13 @@ const Products = ({ results }: Props) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage } = useInfiniteQuery(
-      ['product'],
+      ['product_prod'],
       get_products,
       {
         getNextPageParam: (page: any) => page.meta.next
       }
     )
-
-
+      
 
   const queryClient = useQueryClient();
 
@@ -53,6 +52,7 @@ const Products = ({ results }: Props) => {
     },
   });
 
+  
   if (deleteProdMutation.isLoading) return <Loader />
   if (error instanceof Error) return <>{toast.error(error.message)}</>
 
@@ -114,7 +114,7 @@ const Products = ({ results }: Props) => {
                     </td>
 
                     <td className="px-4 py-3">
-                      {product.count_in_stock}
+                      {product.count_in_Stock}
                     </td>
 
                     <td className="px-4 py-3">
@@ -169,7 +169,7 @@ const Products = ({ results }: Props) => {
                       </td>
 
                       <td className="px-4 py-3">
-                        {product.count_in_stock}
+                        {product.count_in_Stock}
                       </td>
 
                       <td className="px-4 py-3">

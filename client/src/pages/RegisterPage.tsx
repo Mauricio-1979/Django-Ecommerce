@@ -27,7 +27,7 @@ const RegisterPage = () => {
     },
     onError: (error) => {
       toast.error("There was a mistake, try again")
-      console.log(error)
+      
     }
   })
 

@@ -1,13 +1,14 @@
 import { useAuthStore } from "../store/auth";
-import { Token } from "../Interfaces";
+import { Token, Order, Order_items } from "../Interfaces";
 import jwt_decode from 'jwt-decode';
-//import { Link, useNavigate } from "react-router-dom";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { edit_user } from "../api/users";
+import { edit_user, get_solo_user } from "../api/users";
 import { my_orders } from "../api/orders";
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom"; 
+
 
 function UserProfile() {
 
@@ -24,27 +25,28 @@ function UserProfile() {
   const token: string = useAuthStore.getState().access;
   const tokenDecoded: Token = jwt_decode(token)
   const user_id = tokenDecoded.user_id;
-  const avatar = tokenDecoded.avatar
-  const email = tokenDecoded.email;
-  const name = tokenDecoded.name;
-  const last_name = tokenDecoded.last_name;
+
+  const { data: user } = useQuery({
+    queryKey: ['get_users'],
+    queryFn: () => get_solo_user(user_id),
+  })  
 
   useEffect(() => {
-    if (token) {
-      setStateName(name)
-      setStateLast_name(last_name)
-      setStateEmail(email)
-      setImage(avatar)
+    if(user){
+      setStateName(user.name)
+      setStateLast_name(user.last_name)
+      setStateEmail(user.email)
+      setImage(user.avatar)
     }
-  }, [token])
+  }, [user])
 
-
+  
   const queryClient = useQueryClient();
 
   const editUserMutation = useMutation({
     mutationFn: edit_user,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['users_profile'] })
       toast.success("User update successfully")
       setShow(true)
     },
@@ -54,10 +56,11 @@ function UserProfile() {
     }
   })
 
-  const { data, isError, isLoading } = useQuery({
+  const { data:orders, isError, isLoading } = useQuery({
     queryKey: ['orders'],
     queryFn: my_orders,
   })
+
 
   if (isError) return toast.error("Error!")
   if (isLoading) return <Loader />
@@ -72,7 +75,6 @@ function UserProfile() {
       avatar: image
     })
   }
-
 
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -104,20 +106,20 @@ function UserProfile() {
     setImage(null)
     setIsHovered(false)
   }
-
+  //max-w-sm
   return (
 
     <div className="flex justify-center pt-[100px]">
-      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full w-7/12 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         {show ? (
           <>
             <div className="flex flex-col items-center pb-10">
-              <img className="w-24 h-24 mb-3 mt-5 rounded-full shadow-lg" src={filePreview || `http://localhost:8000${avatar}`} alt="Bonnie image" />
+              <img className="w-24 h-24 mb-3 mt-5 rounded-full shadow-lg" src={filePreview || `http://localhost:8000${user.avatar}`} alt="Bonnie image" />
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                {email}
+                {user.email}
               </h5>
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {name} {" "} {last_name}
+                {user.name} {" "} {user.last_name}
               </span>
               <div className="flex mt-4 space-x-3 md:mt-6">
                 <button onClick={() => setShow(false)}
@@ -134,19 +136,26 @@ function UserProfile() {
                   <tr>
                     <th scope="col" className="px-4 py-3">Order ID</th>
                     <th scope="col" className="px-4 py-3">Email</th>
-                    <th scope="col" className="px-4 py-3">Username</th>
-                    
+                    <th scope="col" className="px-4 py-3">Date</th>
+                    <th scope="col" className="px-4 py-3">utility</th>
                   </tr>
                 </thead>
 
-                <tbody>
-                  <tr className="border-b dark:border-gray-700">
-                    <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">sdsd</th>
-                    <td className="px-4 py-3">sdsdsd</td>
-                    <td className="px-4 py-3">sdsdsd</td>
-                    
-                  </tr>
-                </tbody>
+                {orders && orders!.map((order: Order) => (
+                  <tbody key={order.id}>
+                    <tr className="border-b dark:border-gray-700">
+                      <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{order.id}</th>
+                      <td className="px-4 py-3">{order.order_items.map((item: Order_items) => (item.product))}</td>
+                      <td className="px-4 py-3">{order.created_at.slice(0,10)}</td>
+                      <td className="px-4 py-3">
+                        <Link to={`/order/${order.id}`} className="p-2 cursor-pointer rounded-lg bg-gray-900 hover:bg-gray-700">
+                          See
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                ))}
+
               </table>
             </div>
 
@@ -157,16 +166,16 @@ function UserProfile() {
               <div className="p-3">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                 <input
-                  type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name..."
-                  value={name}
+                  type="text" name="stateName" id="stateName" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name..."
+                  value={stateName}
                   onChange={(e) => setStateName(e.target.value)}
                 />
-                f</div>
+              </div>
               <div className="p-3">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
                 <input
-                  type="text" name="last_name" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last name..."
-                  value={last_name}
+                  type="text" name="stateLast_name" id="stateLast_name" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last name..."
+                  value={stateLast_name}
                   onChange={(e) => setStateLast_name(e.target.value)}
                 />
               </div>
@@ -254,7 +263,7 @@ function UserProfile() {
                       </button>
                       <img
                         className="h-48 w-96"
-                        src={filePreview || `http://localhost:8000${avatar}`}
+                        src={filePreview || `http://localhost:8000${user.avatar}`}
                         alt="Imagen seleccionada"
 
                       />
