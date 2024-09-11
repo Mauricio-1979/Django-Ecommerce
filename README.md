@@ -1,4 +1,11 @@
-'''Sitio web de ecommerce en el que se puede filtrar los productos por categorias. Posee historial de compras, panel de control de admin en la que puede tomar acciones sobre los productos, ordenes y usuarios, Autenticacion y Autorización con Token. Pasarela de pago  de Paypal
-Interfaz: React, Typescript, React Query y Zustang, react-router-dom , CSS y ThemeProvider
-Servidor: Python Django 
-Base de datos: PostgreSQL'''
+<h6>
+  Web app en el que se puede filtrar los productos por categorias, 
+   Panel cliente con edición de datos e historial de compras. Panel 
+   admin con acciones en los productos, ordenes y usuarios,
+   paginación de productos. Pasarela de pagos Paypal. Autenticación y
+   Autorización
+   <h3>Interfaz:</h3> React Typescript, React Query y Zustand, react-router-dom,
+   CSS y Tailwindcss 
+   <h3>Servidor:</h3> Python Django, djangorestframework
+   <h3>Base de datos:</h3> PostgreSQL
+</h6>
